@@ -33,6 +33,19 @@
               "    pm.expect(jsonData.name).to.equal(createdName);\r",
               "});\r",
               "\r",
+              "pm.test(\"Board id has valid format\", function () {\r",
+              "    pm.expect(jsonData.id).to.match(/^[a-f0-9]{24}$/);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"New board is open\", function () {\r",
+              "    pm.expect(jsonData.closed).to.equal(false);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response is JSON\", function () {\r",
+              "    pm.response.to.have.header(\"Content-Type\");\r",
+              "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");\r",
+              "});\r",
+              "\r",
               "\r",
               ""
             ],
@@ -97,6 +110,12 @@
               "    pm.expect(response).to.have.property('closed');\r",
               "    pm.expect(response.closed).to.equal(false);\r",
               "});\r",
+              "\r",
+              "pm.test(\"Returned board is the created one\", function () {\r",
+              "    const board = pm.response.json();\r",
+              "    pm.expect(board.id).to.equal(pm.environment.get(\"board_id\"));\r",
+              "    pm.expect(board.name).to.equal(pm.environment.get(\"boardName\"));\r",
+              "});\r",
               ""
             ],
             "type": "text/javascript",
@@ -157,7 +176,15 @@
           "script": {
             "exec": [
               "let jsonData = pm.response.json();\r",
-              "pm.environment.set(\"list_id\", jsonData.id);"
+              "pm.environment.set(\"list_id\", jsonData.id);\r",
+              "\r",
+              "pm.test(\"List belongs to the created board\", function () {\r",
+              "    pm.expect(jsonData.idBoard).to.equal(pm.environment.get(\"board_id\"));\r",
+              "});\r",
+              "\r",
+              "pm.test(\"List has correct name\", function () {\r",
+              "    pm.expect(jsonData.name).to.equal(pm.environment.get(\"listName\"));\r",
+              "});"
             ],
             "type": "text/javascript",
             "packages": {},
@@ -204,6 +231,29 @@
     },
     {
       "name": "Get Created List",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const lists = pm.response.json();\r",
+              "pm.test(\"Created list is on the board\", function () {\r",
+              "    const names = lists.map(list => list.name);\r",
+              "    pm.expect(names).to.include(pm.environment.get(\"listName\"));\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response is a list of lists\", function () {\r",
+              "    pm.expect(lists).to.be.an(\"array\");\r",
+              "});\r",
+              "\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
       "request": {
         "method": "GET",
         "header": [
@@ -213,12 +263,9 @@
           }
         ],
         "url": {
-          "raw": "https://api.trello.com/1/boards/{{board_id}}/lists?key={{key}}&token={{token}}",
-          "protocol": "https",
+          "raw": "{{base_url}}/1/boards/{{board_id}}/lists?key={{key}}&token={{token}}",
           "host": [
-            "api",
-            "trello",
-            "com"
+            "{{base_url}}"
           ],
           "path": [
             "1",
@@ -260,7 +307,16 @@
           "script": {
             "exec": [
               "let jsonData = pm.response.json();\r",
-              "pm.environment.set(\"card_id\", jsonData.id);"
+              "pm.environment.set(\"card_id\", jsonData.id);\r",
+              "\r",
+              "pm.test(\"Card is in the correct list and board\", function () {\r",
+              "    pm.expect(jsonData.idList).to.equal(pm.environment.get(\"list_id\"));\r",
+              "    pm.expect(jsonData.idBoard).to.equal(pm.environment.get(\"board_id\"));\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Card has a URL\", function () {\r",
+              "    pm.expect(jsonData.url).to.include(\"trello.com/c/\");\r",
+              "});"
             ],
             "type": "text/javascript",
             "packages": {},
@@ -277,12 +333,9 @@
           }
         ],
         "url": {
-          "raw": "https://api.trello.com/1/cards?idList={{list_id}}&key={{key}}&token={{token}}&name={{cardName}}",
-          "protocol": "https",
+          "raw": "{{base_url}}/1/cards?idList={{list_id}}&key={{key}}&token={{token}}&name={{cardName}}",
           "host": [
-            "api",
-            "trello",
-            "com"
+            "{{base_url}}"
           ],
           "path": [
             "1",
@@ -317,7 +370,17 @@
           "listen": "test",
           "script": {
             "exec": [
-              ""
+              "const card = pm.response.json();\r",
+              "\r",
+              "pm.test(\"Returned card is the created one\", function () {\r",
+              "    pm.expect(card.id).to.equal(pm.environment.get(\"card_id\"));\r",
+              "    pm.expect(card.name).to.equal(pm.environment.get(\"cardName\"));\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Card is in the correct list and board\", function () {\r",
+              "    pm.expect(card.idList).to.equal(pm.environment.get(\"list_id\"));\r",
+              "    pm.expect(card.idBoard).to.equal(pm.environment.get(\"board_id\"));\r",
+              "});"
             ],
             "type": "text/javascript",
             "packages": {},
@@ -334,12 +397,9 @@
           }
         ],
         "url": {
-          "raw": "https://api.trello.com/1/cards/{{card_id}}?key={{key}}&token={{token}}",
-          "protocol": "https",
+          "raw": "{{base_url}}/1/cards/{{card_id}}?key={{key}}&token={{token}}",
           "host": [
-            "api",
-            "trello",
-            "com"
+            "{{base_url}}"
           ],
           "path": [
             "1",
@@ -367,11 +427,23 @@
           "listen": "test",
           "script": {
             "exec": [
-              "pm.test(\"Response contains updated board name\", function () {\r",
-              "    const responseJson = pm.response.json();\r",
-              "    pm.expect(responseJson).to.have.property('name', 'UpdatedBoard');\r",
-              "});\r",
-              ""
+              "const board = pm.response.json();\r",
+              "\r",
+              "pm.test(\"Board name is updated\", function () {\r",
+              "    pm.expect(board.name).to.equal(pm.environment.get(\"updatedBoardName\"));\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "let randomNum = Math.floor(Math.random() * 900) + 100;\r",
+              "pm.environment.set(\"updatedBoardName\", \"updatedboard\" + randomNum);"
             ],
             "type": "text/javascript",
             "packages": {},
@@ -383,12 +455,9 @@
         "method": "PUT",
         "header": [],
         "url": {
-          "raw": "https://api.trello.com/1/boards/{{board_id}}?key={{key}}&token={{token}}&name=UpdatedBoard&closed=false",
-          "protocol": "https",
+          "raw": "{{base_url}}/1/boards/{{board_id}}?key={{key}}&token={{token}}&name={{updatedBoardName}}&closed=false",
           "host": [
-            "api",
-            "trello",
-            "com"
+            "{{base_url}}"
           ],
           "path": [
             "1",
@@ -406,12 +475,11 @@
             },
             {
               "key": "name",
-              "value": "UpdatedBoard"
+              "value": "{{updatedBoardName}}"
             },
             {
               "key": "closed",
-              "value": "false",
-              "type": "text"
+              "value": "false"
             }
           ]
         }
@@ -419,13 +487,31 @@
       "response": []
     },
     {
-      "name": "Get Uptaded Board",
+      "name": "Get Updated Board",
       "event": [
         {
           "listen": "test",
           "script": {
             "exec": [
+              "const board = pm.response.json();\r",
               "\r",
+              "pm.test(\"Board name is updated\", function () {\r",
+              "    pm.expect(board.name).to.equal(pm.environment.get(\"updatedBoardName\"));\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Board id is unchanged\", function () {\r",
+              "    pm.expect(board.id).to.equal(pm.environment.get(\"board_id\"));\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
               ""
             ],
             "type": "text/javascript",
@@ -467,7 +553,7 @@
       "response": []
     },
     {
-      "name": "Delete  Board",
+      "name": "Delete Board",
       "event": [
         {
           "listen": "test",
@@ -565,6 +651,50 @@
         }
       },
       "response": []
+    },
+    {
+      "name": "Get Board With Invalid Token",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Invalid token returns 401\", function () {\r",
+              "    pm.response.to.have.status(401);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/1/boards/{{board_id}}?key={{key}}&token=invalidtoken123",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "1",
+            "boards",
+            "{{board_id}}"
+          ],
+          "query": [
+            {
+              "key": "key",
+              "value": "{{key}}"
+            },
+            {
+              "key": "token",
+              "value": "invalidtoken123"
+            }
+          ]
+        }
+      },
+      "response": []
     }
   ],
   "event": [
@@ -586,9 +716,13 @@
         "packages": {},
         "requests": {},
         "exec": [
-          "pm.test(\"Status code is 200\", function () {\r",
-          "    pm.response.to.have.status(200);\r",
-          "});\r",
+          "const skip = [\"Get Deleted Board\", \"Get Board With Invalid Token\"];\r",
+          "\r",
+          "if (!skip.includes(pm.info.requestName)) {\r",
+          "    pm.test(\"Status code is 200\", function () {\r",
+          "        pm.response.to.have.status(200);\r",
+          "    });\r",
+          "}\r",
           "pm.test(\"Response time is less than 1000ms\", function () {\r",
           "    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
           "});"
