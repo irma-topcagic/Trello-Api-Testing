@@ -12,6 +12,7 @@ The collection runs as one end-to-end scenario. Every action is followed by a GE
 4. Archive the list and check that it is closed (Trello doesn't allow deleting lists, only archiving them)
 5. Delete the board and check that it returns 404
 6. Request a board with an invalid token and check that it returns 401
+7. Try to create a board without a name and request a board with an invalid id, and check that both return 400
 
 The order and dependencies between requests are described in [execution-schedule.md](trello/execution-schedule.md).
 
