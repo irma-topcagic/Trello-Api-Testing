@@ -364,7 +364,7 @@
       "response": []
     },
     {
-      "name": "Get Card",
+      "name": "Get Created Card",
       "event": [
         {
           "listen": "test",
@@ -553,6 +553,404 @@
       "response": []
     },
     {
+      "name": "Update List",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "let randomNum = Math.floor(Math.random() * 900) + 100;\r",
+              "pm.environment.set(\"updatedListName\", \"updatedlist\" + randomNum);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const list = pm.response.json();\r",
+              "\r",
+              "pm.test(\"List name is updated\", function () {\r",
+              "    pm.expect(list.name).to.equal(pm.environment.get(\"updatedListName\"));\r",
+              "});\r",
+              "\r",
+              "pm.test(\"List id is unchanged\", function () {\r",
+              "    pm.expect(list.id).to.equal(pm.environment.get(\"list_id\"));\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/1/lists/{{list_id}}?name={{updatedListName}}&key={{key}}&token={{token}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "1",
+            "lists",
+            "{{list_id}}"
+          ],
+          "query": [
+            {
+              "key": "name",
+              "value": "{{updatedListName}}"
+            },
+            {
+              "key": "key",
+              "value": "{{key}}"
+            },
+            {
+              "key": "token",
+              "value": "{{token}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Updated List",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const list = pm.response.json();\r",
+              "\r",
+              "pm.test(\"Updated list name is saved\", function () {\r",
+              "    pm.expect(list.name).to.equal(pm.environment.get(\"updatedListName\"));\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/1/lists/{{list_id}}?key={{key}}&token={{token}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "1",
+            "lists",
+            "{{list_id}}"
+          ],
+          "query": [
+            {
+              "key": "key",
+              "value": "{{key}}"
+            },
+            {
+              "key": "token",
+              "value": "{{token}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update Card",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "let randomNum = Math.floor(Math.random() * 900) + 100;\r",
+              "pm.environment.set(\"updatedCardName\", \"updatedcard\" + randomNum);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const card = pm.response.json();\r",
+              "\r",
+              "pm.test(\"Card name is updated\", function () {\r",
+              "    pm.expect(card.name).to.equal(pm.environment.get(\"updatedCardName\"));\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Card id is unchanged\", function () {\r",
+              "    pm.expect(card.id).to.equal(pm.environment.get(\"card_id\"));\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/1/cards/{{card_id}}?name={{updatedCardName}}&key={{key}}&token={{token}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "1",
+            "cards",
+            "{{card_id}}"
+          ],
+          "query": [
+            {
+              "key": "name",
+              "value": "{{updatedCardName}}"
+            },
+            {
+              "key": "key",
+              "value": "{{key}}"
+            },
+            {
+              "key": "token",
+              "value": "{{token}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Updated Card",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const card = pm.response.json();\r",
+              "\r",
+              "pm.test(\"Updated card name is saved\", function () {\r",
+              "    pm.expect(card.name).to.equal(pm.environment.get(\"updatedCardName\"));\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/1/cards/{{card_id}}?key={{key}}&token={{token}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "1",
+            "cards",
+            "{{card_id}}"
+          ],
+          "query": [
+            {
+              "key": "key",
+              "value": "{{key}}"
+            },
+            {
+              "key": "token",
+              "value": "{{token}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete Card",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/1/cards/{{card_id}}?key={{key}}&token={{token}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "1",
+            "cards",
+            "{{card_id}}"
+          ],
+          "query": [
+            {
+              "key": "key",
+              "value": "{{key}}"
+            },
+            {
+              "key": "token",
+              "value": "{{token}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Deleted Card",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Deleted card returns 404\", function () {\r",
+              "    pm.response.to.have.status(404);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/1/cards/{{card_id}}?key={{key}}&token={{token}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "1",
+            "cards",
+            "{{card_id}}"
+          ],
+          "query": [
+            {
+              "key": "key",
+              "value": "{{key}}"
+            },
+            {
+              "key": "token",
+              "value": "{{token}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Archive List",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const list = pm.response.json();\r",
+              "\r",
+              "pm.test(\"List is archived\", function () {\r",
+              "    pm.expect(list.closed).to.equal(true);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/1/lists/{{list_id}}/closed?value=true&key={{key}}&token={{token}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "1",
+            "lists",
+            "{{list_id}}",
+            "closed"
+          ],
+          "query": [
+            {
+              "key": "value",
+              "value": "true"
+            },
+            {
+              "key": "key",
+              "value": "{{key}}"
+            },
+            {
+              "key": "token",
+              "value": "{{token}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Archived List",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const list = pm.response.json();\r",
+              "\r",
+              "pm.test(\"Archived list is closed\", function () {\r",
+              "    pm.expect(list.closed).to.equal(true);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Archived list still exists\", function () {\r",
+              "    pm.expect(list.id).to.equal(pm.environment.get(\"list_id\"));\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/1/lists/{{list_id}}?key={{key}}&token={{token}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "1",
+            "lists",
+            "{{list_id}}"
+          ],
+          "query": [
+            {
+              "key": "key",
+              "value": "{{key}}"
+            },
+            {
+              "key": "token",
+              "value": "{{token}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
       "name": "Delete Board",
       "event": [
         {
@@ -716,7 +1114,7 @@
         "packages": {},
         "requests": {},
         "exec": [
-          "const skip = [\"Get Deleted Board\", \"Get Board With Invalid Token\"];\r",
+          "const skip = [\"Get Deleted Board\", \"Get Deleted Card\", \"Get Board With Invalid Token\"];\r",
           "\r",
           "if (!skip.includes(pm.info.requestName)) {\r",
           "    pm.test(\"Status code is 200\", function () {\r",
