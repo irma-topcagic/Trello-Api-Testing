@@ -27,4 +27,6 @@ This document defines the order in which API requests must be executed, based on
 | 8 | Archive List | Get Archived List | List is closed |
 | 9 | Delete Board | Get Deleted Board | 404 Not Found |
 | 10 | Get Board With Invalid Token | – | 401 Unauthorized |
+| 11 | Create Board Without Name | – | 400 Bad Request, error message |
+| 12 | Get Board With Invalid ID | – | 400 Bad Request |
 
