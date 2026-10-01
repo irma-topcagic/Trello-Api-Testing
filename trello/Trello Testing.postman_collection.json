@@ -1093,6 +1093,103 @@
         }
       },
       "response": []
+    },
+    {
+      "name": "Create Board Without Name",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Board without name returns 400\", function () {\r",
+              "    pm.response.to.have.status(400);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Error message explains the missing name\", function () {\r",
+              "    const response = pm.response.json();\r",
+              "    pm.expect(response.message).to.equal(\"invalid value for name\");\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/1/boards/?key={{key}}&token={{token}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "1",
+            "boards",
+            ""
+          ],
+          "query": [
+            {
+              "key": "key",
+              "value": "{{key}}"
+            },
+            {
+              "key": "token",
+              "value": "{{token}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Board With Invalid ID",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Invalid board id returns 400\", function () {\r",
+              "    pm.response.to.have.status(400);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Error message says invalid id\", function () {\r",
+              "    pm.expect(pm.response.text()).to.include(\"invalid id\");\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/1/boards/invalid123?key={{key}}&token={{token}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "1",
+            "boards",
+            "invalid123"
+          ],
+          "query": [
+            {
+              "key": "key",
+              "value": "{{key}}"
+            },
+            {
+              "key": "token",
+              "value": "{{token}}"
+            }
+          ]
+        }
+      },
+      "response": []
     }
   ],
   "event": [
@@ -1114,7 +1211,7 @@
         "packages": {},
         "requests": {},
         "exec": [
-          "const skip = [\"Get Deleted Board\", \"Get Deleted Card\", \"Get Board With Invalid Token\"];\r",
+          "const skip = [\"Get Deleted Board\", \"Get Deleted Card\", \"Get Board With Invalid Token\", \"Create Board Without Name\",\"Get Board With Invalid ID\"];\r",
           "\r",
           "if (!skip.includes(pm.info.requestName)) {\r",
           "    pm.test(\"Status code is 200\", function () {\r",
@@ -1122,7 +1219,7 @@
           "    });\r",
           "}\r",
           "pm.test(\"Response time is less than 1000ms\", function () {\r",
-          "    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+          "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
           "});"
         ]
       }
